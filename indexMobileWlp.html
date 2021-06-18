@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>2048小游戏-WLP</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      ;
+    }
+
+    body {
+      background: #543f33 repeat-x 0 bottom;
+      padding: 10px;
+      box-sizing: border-box
+    }
+
+    * {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto 0;
+      position: relative;
+      /* height: 430px; */
+      border: 1px dashed rgba(255, 255, 255, 0.4);
+      box-sizing: border-box;
+      padding: 20px 0;
+
+    }
+
+    #scroe {
+      width: 120px;
+      padding: 0 10px 20px;
+      text-align: left;
+    }
+
+    #scroe .scroeNum {
+
+      font-size: 30px;
+      font-weight: bold;
+      color: #fff;
+      font-family: Arial;
+      line-height: 30px;
+    }
+
+    .summary {
+      width: 280px;
+      font-size: 14px;
+      line-height: 18px;
+      color: #fff;
+      position: absolute;
+      bottom: 320px;
+      left: 50%;
+      margin-left: 180px;
+    }
+
+    #con {
+      width: 280px;
+      height: 280px;
+      margin: 0 auto 0;
+      box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.2);
+      background: #8b5d43;
+      border: 2px solid #402e24;
+      padding: 2px;
+      border-radius: 4px;
+    }
+
+    #con div {
+      float: left;
+      width: 70px;
+      height: 70px;
+      position: relative;
+      background: #8b5d43;
+      box-shadow: inset 0px 0px 3px rgba(0, 0, 0, 0.4);
+      box-sizing: border-box;
+      padding: 4px;
+      border-radius: 6px;
+    }
+
+    #con span {
+      width: 62px;
+      height: 62px;
+      text-align: center;
+      line-height: 62px;
+      font-size: 30px;
+      display: block;
+      position: relative;
+      font-weight: bold;
+      border-radius: 4px;
+    }
+
+    #con span.cube_0 {
+      display: none;
+    }
+
+    #con span.cube_2 {
+      background: #e5d1c6;
+      font-size: 30px;
+      color: #402e24
+    }
+
+    #con span.cube_2::after {
+      content: "2";
+
+    }
+
+    #con span.cube_4 {
+      background: #d1c3bb;
+      font-size: 30px;
+      color: #402e24
+    }
+
+    #con span.cube_4::after {
+      content: "4";
+
+    }
+
+    #con span.cube_8 {
+      background: #d9b9a7;
+      font-size: 30px;
+      color: #402e24
+    }
+
+    #con span.cube_8::after {
+      content: "8";
+    }
+
+    #con span.cube_16 {
+      background: #d3b6a7;
+      font-size: 29px;
+      color: #402e24
+    }
+
+    #con span.cube_16::after {
+      content: "16";
+    }
+
+    #con span.cube_32 {
+      background: #cda48e;
+      font-size: 29px;
+      color: #402e24
+    }
+
+    #con span.cube_32::after {
+      content: "32";
+    }
+
+    #con span.cube_64 {
+      background: #bf8d72;
+      font-size: 29px;
+      color: #402e24
+    }
+
+    #con span.cube_64::after {
+      content: "64";
+    }
+
+    #con span.cube_128 {
+      background: #d78d65;
+      font-size: 26px;
+      color: #402e24
+    }
+
+    #con span.cube_128::after {
+      content: "128";
+    }
+
+    #con span.cube_256 {
+      background: #d37644;
+      font-size: 26px;
+      color: #402e24
+    }
+
+    #con span.cube_256::after {
+      content: "256";
+    }
+
+    #con span.cube_512 {
+      background: #ec7a41;
+      font-size: 26px;
+      color: #402e24
+    }
+
+    #con span.cube_512::after {
+      content: "512";
+    }
+
+    #con span.cube_1024 {
+      background: #ec5541;
+      font-size: 24px;
+      color: #402e24
+    }
+
+    #con span.cube_1024::after {
+      content: "1024";
+    }
+
+    #con span.cube_2048 {
+      background: #e3280f;
+      font-size: 24px;
+      color: #ffffff;
+    }
+
+    #con span.cube_2048::after {
+      content: "2048";
+    }
+
+    #con span.cube_4096 {
+      background: #c72009;
+      font-size: 24px;
+      color: #ffffff
+    }
+
+    #con span.cube_4096::after {
+      content: "4096";
+    }
+
+    #con span.cube_8192 {
+      background: #a01c09;
+      font-size: 24px;
+      color: #ffffff
+    }
+
+    #con span.cube_8192::after {
+      content: "8192";
+    }
+
+    #mask {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      border-radius: 10px;
+      opacity: 0.1;
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: none;
+    }
+
+    #jump {
+      width: 260px;
+      height: 180px;
+      background: #eccbf0;
+      box-shadow: inset 0 0 8px #6fd9f0;
+      position: absolute;
+      top: 150px;
+      left: 30px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    #jump input {
+      width: 100px;
+      height: 36px;
+      margin: 30px 80px;
+    }
+
+    #jump p {
+      margin-top: 30px;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    #jumpFail {
+      width: 260px;
+      height: 180px;
+      background: #eccbf0;
+      box-shadow: inset 0 0 8px #6fd9f0;
+      position: absolute;
+      top: 150px;
+      left: 30px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    #jumpFail input {
+      width: 100px;
+      height: 36px;
+      margin: 30px 80px;
+    }
+
+    #jumpFail p {
+      margin-top: 30px;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .tips {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 14px;
+      text-align: center;
+      line-height: 40px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div id="scroe">
+      <div class="scroeNum" id="scroeNum">2</div>
+    </div>
+    <div id="con">
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+      <div class="cube_box"><span value="0" class="cube_0"></span></div>
+    </div>
+    <div id="mask"></div>
+    <div id="jump">
+      <p>恭喜你已经达到2048</p>
+      <input type="button" value="继续挑战"
+        onclick="document.getElementById('mask').style.display='none';document.getElementById('jump').style.display='none';">
+    </div>
+    <div id="jumpFail">
+      <p>抱歉，失败了</p>
+      <input type="button" value="重新挑战" onclick="location.replace()">
+    </div>
+  </div>
+  <div class="tips">
+    注意：只能在上面的游戏里面进行滑动哦
+  </div>
+  <script>
+    window.onload = function () {
+      let span = this.document.querySelectorAll('span')
+      initNum();
+      function randowCreat() {
+        var random = Math.ceil(Math.random() * span.length);
+        if (span[ random - 1 ].getAttribute('value') != 0) {//判断随机数的位置的值是否为0
+          randowCreat();
+        } else {
+          span[ random - 1 ].setAttribute('value', 2);
+          span[ random - 1 ].className = 'cube_' + 2;
+        }
+      }
+
+      function initNum() {
+        var initializedNum = Math.ceil(Math.random() * 3 + 2);
+        for (var i = 0; i < initializedNum; i++) {
+          randowCreat()
+        }
+      }
+      var maxScore = 0;
+      var maxScoreNum = 1;
+      var xx, yy, XX, YY, swipeX, swipeY;
+      var direction = "";
+      // var con = document.getElementById("con");
+      window.addEventListener('touchstart', function (event) {
+        event.stopPropagation();//阻止冒泡
+        // event.preventDefault();//阻止浏览器默认事件
+        xx = event.targetTouches[ 0 ].screenX;
+        yy = event.targetTouches[ 0 ].screenY;
+        swipeX = true;
+        swipeY = true;
+      })
+      window.addEventListener('touchmove', function (event) {
+        event.stopPropagation();//阻止冒泡
+        // event.preventDefault();//阻止浏览器默认事件
+        XX = event.targetTouches[ 0 ].screenX;
+        YY = event.targetTouches[ 0 ].screenY;
+        if (swipeX && Math.abs(XX - xx) - Math.abs(YY - yy) > 0)  //左右滑动
+        {
+          event.stopPropagation();//阻止冒泡
+          // event.preventDefault();//阻止浏览器默认事件
+          swipeY = false;
+          //左右滑动
+          if (XX - xx > 0) {
+            //➡️
+            direction = "goRight";
+          } else {
+            //←
+            direction = "goLeft";
+          }
+        } else if (swipeY && Math.abs(XX - xx) - Math.abs(YY - yy) < 0) {  //上下滑动
+          swipeX = false;
+          //上下滑动，使用浏览器默认的上下滑动
+          if (YY - yy > 0) {
+            //↓
+            direction = "goBottom";
+          } else {
+            //↑
+            direction = "goTop";
+          }
+        }
+
+      })
+      window.addEventListener('touchend', function (event) {
+        switch (direction) {
+          case "goLeft":
+            console.log("←");
+            run([ 0, 1, 2, 3 ]);
+            run([ 4, 5, 6, 7 ]);
+            run([ 8, 9, 10, 11 ]);
+            run([ 12, 13, 14, 15 ]);
+            break;
+          case "goRight":
+            console.log("➡️");
+            run([ 3, 2, 1, 0 ]);
+            run([ 7, 6, 5, 4 ]);
+            run([ 11, 10, 9, 8 ]);
+            run([ 15, 14, 13, 12 ]);
+            break;
+          case "goTop":
+            console.log("↑");
+            run([ 0, 4, 8, 12 ]);
+            run([ 1, 5, 9, 13 ]);
+            run([ 2, 6, 10, 14 ]);
+            run([ 3, 7, 11, 15 ]);
+            break;
+          case "goBottom":
+            console.log("↓");
+            run([ 12, 8, 4, 0 ]);
+            run([ 13, 9, 5, 1 ]);
+            run([ 14, 10, 6, 2 ]);
+            run([ 15, 11, 7, 3 ]);
+            break;
+        }
+        //获取最大值
+        if (direction == "goLeft" || direction == "goRight" || direction == "goTop" || direction == "goBottom") {
+          for (var i = 0; i < span.length; i++) {
+            if (Number(span[ i ].getAttribute('value')) > maxScore) {
+              maxScore = Number(span[ i ].getAttribute('value'));
+
+            }
+          }
+          document.getElementsByClassName("scroeNum")[ 0 ].innerHTML = maxScore;
+          if (maxScore == 2048 * maxScoreNum) {
+            document.getElementById("jump").getElementsByTagName('p')[ 0 ].innerHTML = "恭喜你,已经达到" + 2048 * maxScoreNum;
+            maxScoreNum++;
+            document.getElementById("mask").style.display = "block";
+            document.getElementById("jump").style.display = "block";
+          }
+
+          for (var i = 0; i < span.length; i++) {//说明有空位
+            if (span[ i ].getAttribute('value') == 0) {
+              randowCreat();
+              break;
+            }
+            if (i == 15) {
+              document.getElementById("mask").style.display = "block";
+              document.getElementById("jumpFail").style.display = "block";
+            }
+          }
+        }
+        event.stopPropagation();//阻止冒泡
+        // event.preventDefault();//阻止浏览器默认事件
+      })
+      function _2048(arr) {
+
+        let newArr = [];
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[ i ] != 0) {
+            for (var j = i + 1; j < arr.length; j++) {
+              if (arr[ j ] != 0) {
+                break;
+              }
+            }
+            if (arr[ i ] != arr[ j ]) {
+              newArr.push(arr[ i ]);
+            } else {
+              newArr.push(arr[ i ] + arr[ j ]);
+              i = j;
+            }
+          }
+        }
+
+        for (let i = 0; i < arr.length; i++) {
+          if (!newArr[ i ]) { newArr[ i ] = 0 }
+        }
+        return newArr;
+      }
+
+      function run(arr) {
+        // span[ random - 1 ].setAttribute('value', 2);
+        // span[ random - 1 ].className = 'cube_' + 2;
+        let newValue = _2048([
+          Number(span[ arr[ 0 ] ].getAttribute('value')),
+          Number(span[ arr[ 1 ] ].getAttribute('value')),
+          Number(span[ arr[ 2 ] ].getAttribute('value')),
+          Number(span[ arr[ 3 ] ].getAttribute('value')),
+        ]);
+        for (var i = 0; i < newValue.length; i++) {
+          span[ arr[ i ] ].setAttribute('value', newValue[ i ]);
+          span[ arr[ i ] ].className = 'cube_' + newValue[ i ];
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>

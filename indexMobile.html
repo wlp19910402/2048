@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>2048小游戏-移动端</title>
+  <link rel="stylesheet" href="./css/mobile.css" />
+  <script src="js/mobile2048.js"></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <div id="scroe">
+      <p class="scroeNum" id="scroeNum">0</p>
+    </div>
+    <div id="con">
+      <div><img value="0" src="img/cube_0.png" /></div>
+      <div><img value="0" src="img/cube_0.png" /></div>
+      <div><img value="0" src="img/cube_0.png" /></div>
+      <div><img value="0" src="img/cube_0.png" /></div>
+
+      <div><img value="0" src="img/cube_0.png" /></div>
+      <div><img value="0" src="img/cube_0.png" /></div>
+      <div><img value="0" src="img/cube_0.png" /></div>
+      <div><img value="0" src="img/cube_0.png" /></div>
+
+      <div><img value="0" src="img/cube_0.png" /></div>
+      <div><img value="0" src="img/cube_0.png" /></div>
+      <div><img value="0" src="img/cube_0.png" /></div>
+      <div><img value="0" src="img/cube_0.png" /></div>
+
+      <div><img value="0" src="img/cube_0.png" /></div>
+      <div><img value="0" src="img/cube_0.png" /></div>
+      <div><img value="0" src="img/cube_0.png" /></div>
+      <div><img value="0" src="img/cube_0.png" /></div>
+    </div>
+    <div id="mask"></div>
+    <div id="jump">
+      <p>恭喜你已经达到2048</p>
+      <input type="button" value="继续挑战"
+        onclick="document.getElementById('mask').style.display='none';document.getElementById('jump').style.display='none';">
+    </div>
+    <div id="jumpFail">
+      <p>抱歉，失败了</p>
+      <input type="button" value="重新挑战" onclick="location.replace()">
+    </div>
+  </div>
+</body>
+
+</html>
